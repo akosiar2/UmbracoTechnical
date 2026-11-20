@@ -1,0 +1,57 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<ArticleList>
+@{
+    Layout = "_Master.cshtml";
+    var articles = Model.Children<Article>()
+                        .Where(x => x.IsVisible())
+                        .OrderByDescending(x => x.PublishDate);
+}
+<partial name="Partials/SectionHeader" model="@Model.Parent" />
+<section class="section">
+    <div class="container">
+        <h1 class="text-center mb-4">@Model.Name</h1>
+
+        <div class="row" style="display: flex; flex-wrap: wrap; gap: 20px;">
+            @if (articles != null && articles.Any())
+            {
+                foreach (var article in articles)
+                {
+                    <div style="flex: 1 1 calc(50% - 20px); border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; flex-direction: column;">
+                        @if (article.HeroImage != null)
+                        {
+                            <div style="margin-bottom: 15px;">
+                                <img src="@article.HeroImage.Url()" alt="@(article.Title ?? article.Name)" style="width: 100%; height: 200px; object-fit: cover; border-radius: 4px;" />
+                            </div>
+                        }
+
+                        <h2 style="margin-top: 0;">
+                            <a href="@article.Url()" style="text-decoration: none; color: inherit;">
+                                @(string.IsNullOrWhiteSpace(article.Title) ? article.Name : article.Title)
+                            </a>
+                        </h2>
+
+                        @if (article.PublishDate != default)
+                        {
+                            <p style="color: #888; font-size: 0.85rem; margin-bottom: 10px;">
+                                Published: @article.PublishDate?.ToString("MMMM dd, yyyy")
+                            </p>
+                        }
+
+                        @if (!string.IsNullOrWhiteSpace(article.Intro))
+                        {
+                            <p style="flex-grow: 1;">@article.Intro</p>
+                        }
+
+                        <div style="margin-top: 15px;">
+                            <a href="@article.Url()" class="button bg-secondary-color" style="display: inline-block;">Read more &rarr;</a>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p>No articles found yet. Add some in the backoffice!</p>
+            }
+        </div>
+    </div>
+</section>

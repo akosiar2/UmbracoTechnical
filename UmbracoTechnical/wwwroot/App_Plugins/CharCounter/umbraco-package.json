@@ -1,0 +1,35 @@
+{
+  "$schema": "../../umbraco-package-schema.json",
+  "name": "CharCounter",
+  "version": "1.0.0",
+  "extensions": [
+    {
+      "type": "propertyEditorUi",
+      "alias": "Custom.PropertyEditorUi.CharCounter",
+      "name": "Character Counter Property Editor UI",
+      "js": "/App_Plugins/CharCounter/char-counter.js",
+      "meta": {
+        "label": "Text with Character Counter",
+        "propertyEditorSchemaAlias": "Umbraco.Plain.String",
+        "icon": "icon-autofill",
+        "group": "common",
+        "settings": {
+          "properties": [
+            {
+              "alias": "placeholder",
+              "label": "Placeholder",
+              "description": "Custom placeholder text",
+              "propertyEditorUiAlias": "Umb.PropertyEditorUi.TextBox"
+            },
+            {
+              "alias": "maxChars",
+              "label": "Max Characters",
+              "description": "Optional limit on characters",
+              "propertyEditorUiAlias": "Umb.PropertyEditorUi.Integer"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

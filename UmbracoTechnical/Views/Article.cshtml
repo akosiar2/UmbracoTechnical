@@ -1,0 +1,54 @@
+﻿@using Umbraco.Cms.Web.Common.PublishedModels
+@using UmbracoTechnical.Services
+@inherits Umbraco.Cms.Web.Common.Views.UmbracoViewPage<Article>
+@inject IReadingTimeService ReadingTimeService
+@{
+    Layout = "_Master.cshtml";
+
+    // Calculate reading time combining intro and body text
+    string fullContent = $"{Model.Intro} {Model.Body}";
+    int readingTime = ReadingTimeService.CalculateReadingTime(fullContent);
+}
+<partial name="Partials/SectionHeader" model="@Model.Parent" />
+<section class="section">
+    <div class="container">
+        <article class="container my-5" style="max-width: 800px;">
+            <h1>@(string.IsNullOrWhiteSpace(Model.Title) ? Model.Name : Model.Title)</h1>
+
+            @if (!string.IsNullOrWhiteSpace(Model.SubtitleWithCounter))
+            {
+                <p class="text-muted h5 mb-3 font-italic">@Model.SubtitleWithCounter</p>
+            }
+
+            <div class="text-muted mb-3 d-flex gap-3">
+                @if (Model.PublishDate != default)
+                {
+                    <span>Published: @Model.PublishDate?.ToString("MMMM dd, yyyy")</span>
+                }
+                <span>&bull;</span>
+                <strong>~@readingTime min read</strong>
+            </div>
+
+            @if (Model.HeroImage != null)
+            {
+                <div class="mb-4">
+                    <img src="@Model.HeroImage.Url()" alt="@(Model.Title ?? Model.Name)" class="img-fluid rounded" />
+                </div>
+            }
+
+            @if (!string.IsNullOrWhiteSpace(Model.Intro))
+            {
+                <p class="lead font-italic text-secondary">@Model.Intro</p>
+                <hr />
+            }
+
+            <div class="article-body">
+                @Html.Raw(Model.Body)
+            </div>
+
+            <div class="mt-5">
+                <a href="@(Model.Parent?.Url() ?? "/")" class="btn btn-secondary">&larr; Back to Articles</a>
+            </div>
+        </article>
+    </div>
+</section>
